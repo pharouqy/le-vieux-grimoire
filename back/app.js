@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res, next) => {
-  res.send("Le vieux gromoire !!!");
+  res.send("Le vieux gromoire lol !!!");
 });
 
 app.use(cors());
