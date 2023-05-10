@@ -6,6 +6,8 @@ const path = require("path");
 
 require("dotenv").config();
 
+const userRoutes = require("./routes/user");
+
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.d4buf.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
@@ -45,5 +47,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/images", express.static(path.join(__dirname, "images"))); //pour pouvoir accéder aux images depuis le front
+
+app.use("/api/auth", userRoutes);
 
 module.exports = app;
