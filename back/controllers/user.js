@@ -51,7 +51,7 @@ exports.signin = (req, res, next) => {
           const token = jwt.sign(
             {
               email: emailCrypt,
-              id: user._id,
+              userId: user._id,
             },
             process.env.SECRET_TOKEN,
             { expiresIn: "24h" }

@@ -1,6 +1,6 @@
-const mongoose = requere("mongoose");
+const mongoose = require("mongoose");
 
-const bookShema = mongoose.Shema({
+const bookShema = mongoose.Schema({
   userId: { type: String, required: true },
   title: { type: String, required: true },
   author: { type: String, required: true },
