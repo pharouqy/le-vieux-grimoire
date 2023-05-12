@@ -22,9 +22,7 @@ const uploadAndCompressImage = (req, res, next) => {
     }
     // Utiliser le module sharp pour compresser l'image
     const timestamp = Date.now();
-    const name = `images/${timestamp}-${
-      req.file.originalname.split(".")[0]
-    }.webp`;
+    const name = `images/${timestamp}-${req.file.originalname.split(".")[0]}.webp`;
     sharp(req.file.path)
       .resize(800) // Redimensionner l'image à une largeur de 800 pixels
       .jpeg({ quality: 80 }) // Compresser l'image en JPEG avec une qualité de 80%

@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodeToken = jwt.verify(token, process.env.SECRET_TOKEN);
-  const userId = decodeToken.userId;
+  const userId = decodeToken.id;
   try {
     if (!userId) {
       res.status(403).json({ message: "Le userId est invalid !!!" });
