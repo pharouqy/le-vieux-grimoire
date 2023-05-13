@@ -3,7 +3,6 @@ const fs = require("fs");
 
 exports.createBook = (req, res, next) => {
   const objectBook = JSON.parse(req.body.book);
-  console.log(objectBook);
   const book = new Book({
     ...objectBook,
     imageUrl: `${req.protocol}://${req.get("host")}/${req.file.name}`,
@@ -56,11 +55,10 @@ exports.bestratingBook = (req, res, next) => {
 };
 
 exports.updateBook = (req, res, next) => {
-  console.log(req.file);
   const objectBook = req.file
     ? {
-        ...req.body,
-        image: `${req.protocol}://${req.get("host")}/${req.file.name}`,
+        ...JSON.parse(req.body.book),
+        imageUrl: `${req.protocol}://${req.get("host")}/${req.file.name}`,
       }
     : { ...req.body };
   Book.findOne({ _id: req.params.id })
@@ -71,30 +69,59 @@ exports.updateBook = (req, res, next) => {
       if (req.file == null) {
         Book.updateOne({ _id: req.params.id }, { $set: { ...objectBook } })
           .then(() => {
-            res.status(200).json({ message: "Book updated !!!" });
+            res.status(200).json({ message: "Book updated successfully !!!" });
           })
           .catch((error) => {
             throw new Error(error);
           });
       } else {
-        console.log(objectBook);
         Book.updateOne({ _id: req.params.id }, { $set: { ...objectBook } })
-          .then((result) => {
-            if (result.nModified === 0) {
-              return res.status(404).json({ message: "Book not found" });
-            }
-            res.status(200).json({ message: "Book updated successfully" });
+          .then(() => {
+            res.status(200).json({ message: "Book updated successfully !!!" });
           })
           .catch((error) => {
             throw new Error(error);
           });
         const filename = book.imageUrl.split("/images/")[1];
-        fs.unlink(`images/${filename}`, (error) => {
-          if (error) {
-            throw new Error(error);
-          }
-        });
+        if (fs.existsSync(`images/${filename}`)) {
+          fs.unlink(`images/${filename}`, (error) => {
+            if (error) {
+              throw new Error(error);
+            }
+          });
+        } else {
+          res.status(404).json({ message: "Photo n'existe pas !!!" });
+        }
       }
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+
+exports.deleteBook = (req, res, next) => {
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if (!book) {
+        res.status(500).json({ message: "Book n'existe pas !!!" });
+      }
+      Book.deleteOne({ _id: req.params.id })
+        .then(() => {
+          res.status(200).json({ message: "Book deleted successfully !!!" });
+          const filename = book.imageUrl.split("/images/")[1];
+          if (fs.existsSync(`images/${filename}`)) {
+            fs.unlink(`images/${filename}`, (error) => {
+              if (error) {
+                throw new Error(error);
+              }
+            });
+          } else {
+            res.status(404).json({ message: "Photo n'existe pas !!!" });
+          }
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     })
     .catch((error) => {
       throw new Error(error);

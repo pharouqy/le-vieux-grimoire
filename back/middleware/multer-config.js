@@ -23,7 +23,10 @@ const uploadAndCompressImage = (req, res, next) => {
     // Utiliser le module sharp pour compresser l'image
     const timestamp = Date.now();
     const name = req.file
-      ? `images/${timestamp}-${req.file.originalname.split(".")[0]}.webp`
+      ? `images/${timestamp}-${req.file.originalname
+          .split(".")[0]
+          .match(/[a-zA-Z0-9]/g)
+          .join("")}.webp`
       : next();
     if (req.file) {
       sharp(req.file.path)
