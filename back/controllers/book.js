@@ -127,3 +127,60 @@ exports.deleteBook = (req, res, next) => {
       throw new Error(error);
     });
 };
+
+exports.ratingBook = (req, res, next) => {
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if (!book) {
+        res.status(500).json({ message: "Book n'existe pas !!!" });
+      }
+      if (
+        book.ratings
+          .map((object) => {
+            return object.userId;
+          })
+          .includes(req.body.userId)
+      ) {
+        res.status(500).json({ message: "Vous avez déjà voté !!!" });
+      } else {
+        Book.findOneAndUpdate(
+          { _id: req.params.id },
+          {
+            $push: {
+              ratings: {
+                userId: req.body.userId,
+                grade: req.body.rating,
+              },
+            },
+          },
+          {
+            new: true,
+            useFindAndModify: true,
+          }
+        )
+          .then((book) => {
+            const sum = book.ratings.reduce((accu, curr) => {
+              return accu + curr.grade;
+            }, 0);
+            const average = Math.ceil(sum / book.ratings.length);
+            Book.updateOne(
+              { _id: req.params.id },
+              { $set: { averageRating: average } }
+            )
+              .then(() => {
+                console.log("Moyenne à jour !!!");
+              })
+              .catch((error) => {
+                throw new Error(error);
+              });
+            res.status(200).json(book);
+          })
+          .catch((error) => {
+            throw new Error(error);
+          });
+      }
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
