@@ -159,21 +159,32 @@ exports.ratingBook = (req, res, next) => {
           }
         )
           .then((book) => {
+            console.log(
+              Math.ceil(
+                book.ratings.reduce((accu, curr) => {
+                  return parseInt(accu) + parseInt(curr.grade);
+                }, 0) / book.ratings.length
+              )
+            );
             const sum = book.ratings.reduce((accu, curr) => {
               return accu + curr.grade;
             }, 0);
             const average = Math.ceil(sum / book.ratings.length);
-            Book.updateOne(
+            Book.findOneAndUpdate(
               { _id: req.params.id },
-              { $set: { averageRating: average } }
+              { $set: { averageRating: average } },
+              {
+                new: true,
+                useFindAndModify: true,
+              }
             )
               .then(() => {
-                console.log("Moyenne à jour !!!");
+                res.status(200).json(book);
               })
               .catch((error) => {
                 throw new Error(error);
               });
-            res.status(200).json(book);
+            console.log("Moyenne à jour !!!");
           })
           .catch((error) => {
             throw new Error(error);
