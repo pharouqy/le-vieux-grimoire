@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   // si la requête est une requête POST ou PUT et qu'il y a un fichier
   const book = JSON.parse(req.body.book);
   const { title, author, year, genre } = book; // ES6 destructuration
-  checkInput(req, res, next, title, author, year, genre);
+  checkInput(res, next, title, author, year, genre);
   function checkInput(res, next, title, author, year, genre) {
     if (
       title.length >= 3 &&
@@ -18,10 +18,12 @@ module.exports = (req, res, next) => {
     ) {
       next();
     } else {
-      res.status(400).json({
-        message:
-          "vous devez remplir tous les champs avec au moins 3 caractéres sans utiliser de symbole spéciale !!!",
-      });
+      res
+        .status(400)
+        .json({
+          message:
+            "vous devez remplir tous les champs avec au moins 3 caractéres sans utiliser de symbole spéciale !!!",
+        });
     }
   }
 };
