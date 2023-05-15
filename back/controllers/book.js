@@ -159,13 +159,6 @@ exports.ratingBook = (req, res, next) => {
           }
         )
           .then((book) => {
-            console.log(
-              Math.ceil(
-                book.ratings.reduce((accu, curr) => {
-                  return parseInt(accu) + parseInt(curr.grade);
-                }, 0) / book.ratings.length
-              )
-            );
             const sum = book.ratings.reduce((accu, curr) => {
               return accu + curr.grade;
             }, 0);

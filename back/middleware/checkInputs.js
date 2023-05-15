@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
   const regexAlpha = /^[a-zA-Z, àâäéèêëîïôöùûüÿçÂÊÎÔÛÄËÏÖÜÀÆÇÉÈŒÙ&]+$/;
-  const regexNumber = /^[0-9]+$/;
+  const regexNumber = /^[0-9]{4}$/;
   // si la requête est une requête POST ou PUT et qu'il y a un fichier
   const book = JSON.parse(req.body.book);
   const { title, author, year, genre } = book; // ES6 destructuration
