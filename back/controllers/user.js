@@ -9,10 +9,9 @@ exports.signup = (req, res, next) => {
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-        email: CryptoJS.EvpKDF(
-          req.body.email,
-          process.env.SECRET_TOKEN
-        ).toString(CryptoJS.enc.Base64),
+        email: CryptoJS.EvpKDF(req.body.email, process.env.SECRET_KEY).toString(
+          CryptoJS.enc.Base64
+        ),
         password: hash,
       });
       user
@@ -32,7 +31,7 @@ exports.signup = (req, res, next) => {
 exports.signin = (req, res, next) => {
   const emailCrypt = CryptoJS.EvpKDF(
     req.body.email,
-    process.env.SECRET_TOKEN
+    process.env.SECRET_KEY
   ).toString(CryptoJS.enc.Base64);
   User.findOne({ email: emailCrypt })
     .then((user) => {

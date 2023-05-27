@@ -171,7 +171,7 @@ exports.ratingBook = (req, res, next) => {
                 useFindAndModify: true,
               }
             )
-              .then(() => {
+              .then((book) => {
                 res.status(200).json(book);
               })
               .catch((error) => {

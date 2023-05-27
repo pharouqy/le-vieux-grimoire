@@ -31,7 +31,7 @@ const uploadAndCompressImage = (req, res, next) => {
     if (req.file) {
       sharp(req.file.path)
         .resize(800) // Redimensionner l'image à une largeur de 800 pixels
-        .jpeg({ quality: 80 }) // Compresser l'image en JPEG avec une qualité de 80%
+        .webp({ quality: 80 }) // Compresser l'image en WEBP avec une qualité de 80%
         .toFile(name, (err, info) => {
           if (err) {
             return res.status(500).json({ error: err.message });
