@@ -22,7 +22,7 @@ mongoose
 
 const app = express();
 
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmet({ crossOriginResourcePolicy: false })); // En désactivant cette option avec la valeur false, nous permettons aux ressources d'être chargées à partir de différents domaines et origines.
 
 // Configurer les options CORS
 const corsOptions = {
