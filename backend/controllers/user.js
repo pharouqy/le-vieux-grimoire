@@ -52,7 +52,7 @@ exports.signin = (req, res, next) => {
               id: user._id,
             },
             process.env.SECRET_TOKEN,
-            { expiresIn: "24h" }
+            { expiresIn: process.env.EXPIRE_TIME }
           );
           res.status(200).json({ userId: user._id, token: token });
         })

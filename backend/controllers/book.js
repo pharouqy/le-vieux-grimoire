@@ -116,7 +116,7 @@ exports.deleteBook = (req, res, next) => {
               }
             });
           } else {
-            res.status(404).json({ message: "Photo n'existe pas !!!" });
+            res.status(500).json({ message: "Photo n'existe pas !!!" });
           }
         })
         .catch((error) => {
